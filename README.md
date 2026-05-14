@@ -1,1 +1,3 @@
 # kaggle_workplace
+
+#メモ　
