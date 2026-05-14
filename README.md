@@ -18,6 +18,11 @@ from sklearn import metrics
 ```
 
 ### 2. データの読み込み
+
+#data_cleaner = [data1, data_val], 一緒にすることでラベルの抽出楽になる
+
+#data1 = data_raw.copy(deep = True), コピー渡してミスしてもデータ汚染されないようにらしい
+
 ```python
 #import data from file: https://pandas.pydata.org/pandas-docs/stable/generated/pandas.read_csv.html
 data_raw = pd.read_csv('../input/train.csv')
@@ -42,4 +47,37 @@ print (data_raw.info()) #https://pandas.pydata.org/pandas-docs/stable/generated/
 #data_raw.head() #https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.head.html
 #data_raw.tail() #https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.tail.html
 data_raw.sample(10) #https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.sample.html
+```
+### 3.データクリーニングなど
+
+#データの中身確認
+```python
+print('Train columns with null values:\n', data1.isnull().sum())#カラムごとの欠損値の確認
+print("-"*10)
+
+print('Test/Validation columns with null values:\n', data_val.isnull().sum())#カラムごとの欠損値の確認
+print("-"*10)
+
+data_raw.describe(include = 'all')#統計量計算　数値データの確認だったら引数なくておけ
+```
+#クリーニング
+```python
+###COMPLETING: complete or delete missing values in train and test/validation dataset
+for dataset in data_cleaner:    
+    #complete missing age with median
+    dataset['Age'].fillna(dataset['Age'].median(), inplace = True)
+
+    #complete embarked with mode
+    dataset['Embarked'].fillna(dataset['Embarked'].mode()[0], inplace = True)
+
+    #complete missing fare with median
+    dataset['Fare'].fillna(dataset['Fare'].median(), inplace = True)
+    
+#delete the cabin feature/column and others previously stated to exclude in train dataset
+drop_column = ['PassengerId','Cabin', 'Ticket']
+data1.drop(drop_column, axis=1, inplace = True)
+
+print(data1.isnull().sum())
+print("-"*10)
+print(data_val.isnull().sum())
 ```
